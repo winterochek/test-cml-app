@@ -78,7 +78,7 @@ export function Map() {
             onClick={onClick}
          >
             {clicks.map((latLng, i) => (
-               <MarkerF label={`Quest: ${i + 1}`} key={i} position={latLng} />
+               <MarkerF label={(i + 1).toString()} key={i} position={latLng} />
             ))}
             <></>
          </GoogleMap>
