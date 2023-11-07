@@ -41,11 +41,11 @@ export function Map() {
       const coordinates = e.latLng?.toJSON()
       if (!coordinates) return
       console.log('coordidnates', coordinates)
+      setClicks([...clicks, e.latLng?.toJSON()])
       await createVisit({
          location: { latitude: coordinates.lat, longitude: coordinates.lng },
          timestamp: new Date().getTime(),
       })
-      setClicks([...clicks, e.latLng?.toJSON()])
    }
 
    const { isLoaded } = useJsApiLoader({
