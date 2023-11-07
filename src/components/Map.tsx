@@ -22,6 +22,11 @@ export function Map() {
       await getDocs(query(collection(db, 'visits'), orderBy('timestamp'))).then(querySnapshot => {
          const newData = querySnapshot.docs.map(doc => ({ ...doc.data(), id: doc.id }))
          setVisits(newData as Visit[])
+         const locations = (newData as Visit[]).map(visit => ({
+            lat: visit.location.latitude,
+            lng: visit.location.longitude,
+         }))
+         setClicks(locations)
       })
    }, [])
 
@@ -29,12 +34,7 @@ export function Map() {
 
    useEffect(() => {
       fetchPost()
-      const locations = visits.map(visit => ({
-         lat: visit.location.latitude,
-         lng: visit.location.longitude,
-      }))
-      setClicks(locations)
-   }, [fetchPost, visits])
+   }, [fetchPost])
 
    const onClick = async (e: google.maps.MapMouseEvent) => {
       if (!e.latLng) return
