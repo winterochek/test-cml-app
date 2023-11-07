@@ -13,8 +13,8 @@ export function Map() {
    const [clicks, setClicks] = useState<google.maps.LatLngLiteral[]>([])
    console.log(clicks)
    const [center] = useState<google.maps.LatLngLiteral>({
-      lat: 50.44469333998908,
-      lng: 30.50489938921214,
+      lat: 50.44,
+      lng: 30.5,
    })
 
    const [visits, setVisits] = useState<Visit[]>([])
@@ -72,7 +72,7 @@ export function Map() {
          <GoogleMap
             mapContainerStyle={containerStyle}
             center={center}
-            zoom={8}
+            zoom={0}
             onLoad={onLoad}
             onUnmount={onUnmount}
             onClick={onClick}
@@ -83,7 +83,7 @@ export function Map() {
             <></>
          </GoogleMap>
          <button
-            style={{ marginTop: '1rem' }}
+            style={{ marginTop: '1rem', marginBottom: '1rem' }}
             type='button'
             onClick={() => {
                deleteAllVisits()
