@@ -72,7 +72,7 @@ export function Map() {
          <GoogleMap
             mapContainerStyle={containerStyle}
             center={center}
-            zoom={6}
+            zoom={2}
             onLoad={onLoad}
             onUnmount={onUnmount}
             onClick={onClick}
