@@ -13,8 +13,8 @@ export function Map() {
    const [clicks, setClicks] = useState<google.maps.LatLngLiteral[]>([])
    console.log(clicks)
    const [center] = useState<google.maps.LatLngLiteral>({
-      lat: 50,
-      lng: 30,
+      lat: 50.44469333998908,
+      lng: 30.50489938921214,
    })
 
    const [visits, setVisits] = useState<Visit[]>([])
