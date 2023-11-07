@@ -21,6 +21,7 @@ export function Map() {
    const fetchPost = useCallback(async () => {
       await getDocs(query(collection(db, 'visits'), orderBy('timestamp'))).then(querySnapshot => {
          const newData = querySnapshot.docs.map(doc => ({ ...doc.data(), id: doc.id }))
+         console.log('fetched visits', newData)
          setVisits(newData as Visit[])
          const locations = (newData as Visit[]).map(visit => ({
             lat: visit.location.latitude,
@@ -57,8 +58,8 @@ export function Map() {
 
    const onLoad = useCallback(function callback(map: any) {
       // This is just an example of getting and using the map instance!!! don't just blindly copy!
-      const bounds = new window.google.maps.LatLngBounds(center)
-      map.fitBounds(bounds)
+    //   const bounds = new window.google.maps.LatLngBounds(center)
+    //   map.fitBounds(bounds)
 
       setMap(map)
    }, [])
@@ -72,7 +73,7 @@ export function Map() {
          <GoogleMap
             mapContainerStyle={containerStyle}
             center={center}
-            zoom={0}
+            zoom={14}
             onLoad={onLoad}
             onUnmount={onUnmount}
             onClick={onClick}
