@@ -3,13 +3,12 @@ import { getFirestore, collection, addDoc, getDocs, deleteDoc, query } from 'fir
 import { VisitData } from '../types'
 
 const firebaseConfig = {
-   apiKey: 'AIzaSyBesU-tHkXHCcqYIOgvWRBfLbVTUzcoDdQ',
-   authDomain: 'test-cml-team.firebaseapp.com',
-   projectId: 'test-cml-team',
-   storageBucket: 'test-cml-team.appspot.com',
-   messagingSenderId: '180158264697',
-   appId: '1:180158264697:web:1f334e6b2898b017872ba8',
-   measurementId: 'G-Q569WRR2V8',
+   apiKey: 'AIzaSyC624SPk1Ldu018rnxtDj7OZj0FhR0Ppmc',
+   authDomain: 'chat-948de.firebaseapp.com',
+   projectId: 'chat-948de',
+   storageBucket: 'chat-948de.appspot.com',
+   messagingSenderId: '441028405968',
+   appId: '1:441028405968:web:7ab036f9f46fa098494cd5',
 }
 
 const app = initializeApp(firebaseConfig)
