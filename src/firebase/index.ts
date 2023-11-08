@@ -1,7 +1,16 @@
 import { initializeApp } from 'firebase/app'
-import { getFirestore, collection, addDoc, getDocs, deleteDoc, query, orderBy } from 'firebase/firestore'
+import {
+   getFirestore,
+   collection,
+   addDoc,
+   getDocs,
+   deleteDoc,
+   query,
+   orderBy,
+} from 'firebase/firestore'
 import { Visit, VisitData } from '../types'
 
+// todo: move to .env
 const firebaseConfig = {
    apiKey: 'AIzaSyC624SPk1Ldu018rnxtDj7OZj0FhR0Ppmc',
    authDomain: 'chat-948de.firebaseapp.com',
@@ -33,7 +42,7 @@ export async function deleteAllVisits() {
 }
 
 export async function getVisits() {
-    const snapshot = await getDocs(query(collection(db, 'visits'), orderBy('timestamp')))
-    const data = snapshot.docs.map(doc => ({ ...doc.data(), id: doc.id }))
-    return data as Visit[]
+   const snapshot = await getDocs(query(collection(db, 'visits'), orderBy('timestamp')))
+   const data = snapshot.docs.map(doc => ({ ...doc.data(), id: doc.id }))
+   return data as Visit[]
 }

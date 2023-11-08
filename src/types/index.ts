@@ -4,8 +4,8 @@ export type VisitData = {
 }
 
 export type Location = {
-    latitude: number;
-    longitude: number;
+   latitude: number
+   longitude: number
 }
 
-export type Visit = VisitData & {id: string}
+export type Visit = VisitData & { id: string }

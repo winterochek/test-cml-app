@@ -5,11 +5,13 @@ import { createVisit, deleteAllVisits, getVisits } from '../firebase'
 import { useGoogleMap } from '../hooks/use-google-map'
 
 export function Map() {
+   const { isLoaded, onUnmount, onLoad, center } = useGoogleMap()
+   const [visits, setVisits] = useState<google.maps.LatLngLiteral[]>([])
+
    const containerStyle = {
       width: '800px',
       height: '800px',
    }
-   const [clicks, setClicks] = useState<google.maps.LatLngLiteral[]>([])
 
    const fetchVisits = useCallback(async () => {
       const data = await getVisits()
@@ -17,30 +19,28 @@ export function Map() {
          lat: visit.location.latitude,
          lng: visit.location.longitude,
       }))
-      setClicks(locations)
+      setVisits(locations)
    }, [])
-
-   useEffect(() => {
-      fetchVisits()
-   }, [fetchVisits])
 
    const onClick = async (e: google.maps.MapMouseEvent) => {
       if (!e.latLng) return
       const coordinates = e.latLng?.toJSON()
       if (!coordinates) return
-      setClicks([...clicks, coordinates])
+      setVisits([...visits, coordinates])
       await createVisit({
          location: { latitude: coordinates.lat, longitude: coordinates.lng },
          timestamp: new Date().getTime(),
       })
    }
 
-   const { isLoaded, onUnmount, onLoad, center } = useGoogleMap()
-
    const onDelete = () => {
       deleteAllVisits()
-      setClicks([])
+      setVisits([])
    }
+
+   useEffect(() => {
+      fetchVisits()
+   }, [fetchVisits])
 
    return isLoaded ? (
       <>
@@ -52,16 +52,12 @@ export function Map() {
             onUnmount={onUnmount}
             onClick={onClick}
          >
-            {clicks.map((latLng, i) => (
+            {visits.map((latLng, i) => (
                <MarkerF label={(i + 1).toString()} key={i} position={latLng} />
             ))}
             <></>
          </GoogleMap>
-         <button
-            style={{ marginTop: '1rem', marginBottom: '1rem' }}
-            type='button'
-            onClick={onDelete}
-         >
+         <button className='delete-btn' type='button' onClick={onDelete}>
             Delete all
          </button>
       </>

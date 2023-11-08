@@ -8,15 +8,17 @@ export function useGoogleMap() {
       lng: 30.5,
    }
 
-   const onLoad = useCallback(function callback(map: unknown) {
+   const onLoad = useCallback((map: unknown) => {
       setMap(map)
    }, [])
 
-   const onUnmount = useCallback(function callback() {
+   const onUnmount = useCallback(() => {
       setMap(null)
    }, [])
+
    const { isLoaded } = useJsApiLoader({
       id: 'google-map-script',
+      // todo: move to env
       googleMapsApiKey: 'AIzaSyBb6GoLIHASZsLpKZhlAowzoxn3YYWXsPI',
    })
 
