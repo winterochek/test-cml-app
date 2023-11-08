@@ -1,9 +1,8 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { GoogleMap, MarkerF, useJsApiLoader } from '@react-google-maps/api'
+import { GoogleMap, MarkerF } from '@react-google-maps/api'
 import { useCallback, useEffect, useState } from 'react'
-import { createVisit, db, deleteAllVisits } from '../firebase'
-import { collection, getDocs, orderBy, query } from 'firebase/firestore'
-import { Visit } from '../types'
+import { createVisit, deleteAllVisits, getVisits } from '../firebase'
+import { useGoogleMap } from '../hooks/use-google-map'
 
 export function Map() {
    const containerStyle = {
@@ -11,62 +10,37 @@ export function Map() {
       height: '800px',
    }
    const [clicks, setClicks] = useState<google.maps.LatLngLiteral[]>([])
-   console.log(clicks)
-   const [center] = useState<google.maps.LatLngLiteral>({
-      lat: 50.44,
-      lng: 30.5,
-   })
 
-   const [visits, setVisits] = useState<Visit[]>([])
-   const fetchPost = useCallback(async () => {
-      await getDocs(query(collection(db, 'visits'), orderBy('timestamp'))).then(querySnapshot => {
-         const newData = querySnapshot.docs.map(doc => ({ ...doc.data(), id: doc.id }))
-         console.log('fetched visits', newData)
-         setVisits(newData as Visit[])
-         const locations = (newData as Visit[]).map(visit => ({
-            lat: visit.location.latitude,
-            lng: visit.location.longitude,
-         }))
-         setClicks(locations)
-      })
+   const fetchVisits = useCallback(async () => {
+      const data = await getVisits()
+      const locations = data.map(visit => ({
+         lat: visit.location.latitude,
+         lng: visit.location.longitude,
+      }))
+      setClicks(locations)
    }, [])
 
-   console.log(visits)
-
    useEffect(() => {
-      fetchPost()
-   }, [fetchPost])
+      fetchVisits()
+   }, [fetchVisits])
 
    const onClick = async (e: google.maps.MapMouseEvent) => {
       if (!e.latLng) return
       const coordinates = e.latLng?.toJSON()
       if (!coordinates) return
-      console.log('coordidnates', coordinates)
-      setClicks([...clicks, e.latLng?.toJSON()])
+      setClicks([...clicks, coordinates])
       await createVisit({
          location: { latitude: coordinates.lat, longitude: coordinates.lng },
          timestamp: new Date().getTime(),
       })
    }
 
-   const { isLoaded } = useJsApiLoader({
-      id: 'google-map-script',
-      googleMapsApiKey: 'AIzaSyBb6GoLIHASZsLpKZhlAowzoxn3YYWXsPI',
-   })
+   const { isLoaded, onUnmount, onLoad, center } = useGoogleMap()
 
-   const [, setMap] = useState(null)
-
-   const onLoad = useCallback(function callback(map: any) {
-      // This is just an example of getting and using the map instance!!! don't just blindly copy!
-    //   const bounds = new window.google.maps.LatLngBounds(center)
-    //   map.fitBounds(bounds)
-
-      setMap(map)
-   }, [])
-
-   const onUnmount = useCallback(function callback() {
-      setMap(null)
-   }, [])
+   const onDelete = () => {
+      deleteAllVisits()
+      setClicks([])
+   }
 
    return isLoaded ? (
       <>
@@ -86,11 +60,7 @@ export function Map() {
          <button
             style={{ marginTop: '1rem', marginBottom: '1rem' }}
             type='button'
-            onClick={() => {
-               deleteAllVisits()
-               setVisits([])
-               setClicks([])
-            }}
+            onClick={onDelete}
          >
             Delete all
          </button>
